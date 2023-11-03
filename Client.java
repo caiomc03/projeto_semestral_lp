@@ -3,7 +3,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-//teste123
 
 public class Client {
     private Socket clientSocket;
