@@ -26,16 +26,21 @@ public class Server
 
     public void clientMessageLoop(ClientSocket clientSocket){
         String msg;
-        try{
-            while((msg = clientSocket.getMessage()) != null && !msg.equalsIgnoreCase("sair"));
+        while(true){
+            
+            if((msg = clientSocket.getMessage()) != null && !msg.equalsIgnoreCase("sair"));
                 {
                     System.out.printf("Mensagem recebida do cliente %s: %s\n", clientSocket.getRemoteSocketAddress(),msg);
 
                 }
+            if(msg.equalsIgnoreCase("sair")){
+                clientSocket.close();
+                System.out.printf("Cliente  %s desconctado \n", clientSocket.getRemoteSocketAddress());
+                break;
+            }
         }
-        finally{
-            clientSocket.close();
-        }
+      
+        
 
     }
 
