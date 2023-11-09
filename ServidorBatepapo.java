@@ -27,7 +27,7 @@ public class ServidorBatepapo {
         }
     }
 
-    private void clientMessageLoop(SocketClient clientSocket){
+    private void clientMessageLoop(SocketCliente clientSocket){
         String msg;
         try
         {

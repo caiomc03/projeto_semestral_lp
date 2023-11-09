@@ -15,7 +15,7 @@ public class SocketCliente {
         this.saida = new PrintWriter(socket.getOutputStream(), true);
     }
 
-    public SocketAdress getRemoteSocketAddress(){
+    public SocketAddress getRemoteSocketAddress(){
         return socket.getRemoteSocketAddress();
     }
     public void close(){
