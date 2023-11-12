@@ -1,6 +1,6 @@
 public class SqlUtils {
 
-    public String getSaldoQuery(String user){
+    public static String getSaldoQuery(String user){
         return ("Select saldo from usuarios where user = " + user);
     }
 }

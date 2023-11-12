@@ -16,6 +16,9 @@ public class ClienteBatepapo implements Runnable {
     private JButton button;
     private JButton saldoButton;
 
+    private String usr_login;
+    private String usr_password;
+
     public ClienteBatepapo(){
         scanner = new Scanner (System.in);
         frame = new JFrame("Cliente Batepapo");
@@ -52,8 +55,8 @@ public class ClienteBatepapo implements Runnable {
             String logstring = login.getLogmsg();
 
             String[] parts = logstring.split("---");
-            String usr_login = parts[1];
-            String usr_password = parts[2];
+            usr_login = parts[1];
+            usr_password = parts[2];
 
             System.out.println(usr_login);
             System.out.println(usr_password);
@@ -136,7 +139,7 @@ public class ClienteBatepapo implements Runnable {
         saldoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String msg = "saldo";
+            String msg = SqlUtils.getSaldoQuery(usr_login);
                 clientSocket.sendMsg(msg);
             }
         });
