@@ -21,7 +21,7 @@ public class ClienteBatepapo implements Runnable {
         frame = new JFrame("Cliente Batepapo");
         textField = new JTextField(50); // aumentando o tamanho da caixa de texto
         button = new JButton("Enviar");
-        saldoButton = new JButton("Verificas Saldo");
+        saldoButton = new JButton("Verificar Saldo");
 
         // adicionando WindowListener para fechar o socket e a janela
         frame.addWindowListener(new WindowAdapter() {
@@ -41,9 +41,7 @@ public class ClienteBatepapo implements Runnable {
         try {
             clientSocket = new SocketCliente(new Socket(ServidorBatepapo.ADDRESS, ServidorBatepapo.PORT));
             new Thread(this).start();
-            
             Login login = new Login();
-            
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {

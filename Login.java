@@ -52,6 +52,7 @@ public class Login {
                 String password = new String(passwordField.getPassword());
                 logmsg = "login" + "---" + user + "---" + password; //Enviar essa mensagem ao servidor
                 frame.dispose();
+                
             }
             
         });
