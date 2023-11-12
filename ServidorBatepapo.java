@@ -32,23 +32,43 @@ public class ServidorBatepapo {
 
     private void clientMessageLoop(SocketCliente clientSocket){
 
-        clientLoginLoop(clientSocket);
-
-
-
-
-        System.out.printf("%s logged in\n", clientSocket.getRemoteSocketAddress());
-
+        Boolean logged = false;
+    
         String msg;
+        //MESSAGELOOP
         try
         {
-            
+            System.out.println("||| LOGGING IN |||");
+
             while((msg = clientSocket.getMessage()) != null){
-                if("sair".equalsIgnoreCase(msg)) return;
-                System.out.printf("<- Client %s: %s\n", 
-                                clientSocket.getRemoteSocketAddress(), msg);
-                sendMsg2Client(clientSocket, msg);
-                // sendMsgToAll(clientSocket, msg);
+
+                
+
+                if(logged == false)
+                {
+
+                    if(msg == "admin|admin"){
+                        logged = true;
+                    }
+
+                }
+
+                if(logged == true)
+                {
+                    System.out.println("||| INSIDE MESSAGE LOOP |||");
+
+                    if("sair".equalsIgnoreCase(msg)) return;
+                    
+                    System.out.printf("<- Client %s: %s\n", 
+                                    clientSocket.getRemoteSocketAddress(), msg);
+                    sendMsg2Client(clientSocket, msg);
+                    // sendMsgToAll(clientSocket, msg);
+
+                }
+
+                
+
+
             }
 
         }
@@ -58,34 +78,6 @@ public class ServidorBatepapo {
             clientSocket.close();
         }
 
-    }
-
-    private void clientLoginLoop(SocketCliente clientSocket){
-        String login_info;
-        // String usr_login;
-        // String usr_password;
-        Boolean login_status = false;
-
-        while((login_info = clientSocket.getMessage()) != null){
-                // System.out.println(login_info);
-
-                //                                          separar admin|admin
-                // String[] parts = login_info.split("|");
-                // usr_login = parts[0];
-                // usr_password = parts[1];
-            
-            System.out.println(login_info);
-
-            // if(checkUserInfo(login_info)){
-            //     login_status = true;
-            //     System.out.println(login_info);
-            // }
-            // if(login_status == true){
-            //     break;
-            // }
-
-
-        }
     }
 
 
@@ -121,18 +113,6 @@ public class ServidorBatepapo {
     //         }   
     //     }
     // }
-
-    private Boolean checkUserInfo(String input){
-        // String[] userList = {"admin|admin"};
-        String userList = "admin|admin";
-
-        if(input == userList){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
 
     public static void main(String agrs[]){
         System.out.println("*v*v*v* CONSOLE DO SERVIDOR *v*v*v*");

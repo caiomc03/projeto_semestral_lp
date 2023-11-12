@@ -52,68 +52,66 @@ public class ClienteBatepapo implements Runnable {
 
             //loop aguardando resposta do login
             while(true){
+                System.out.println("looping");
 
                 logstring = login.getLogmsg();
-                if (logstring == "||empty||"){
-                }
-                else{
+                if (logstring != "||empty||"){
                     break;
                 }
 
-                try {
-                    Thread.sleep(1000);
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
 
-
-
-
+            System.out.println("OUT");
             String[] parts = logstring.split("---");
+
             usr_login = parts[1];
             usr_password = parts[2];
 
+
             clientSocket.sendMsg(String.format("%s|%s",usr_login, usr_password));
 
+
+
+            //loop espera retorno aprove or deny login do server
+
+            messageLoop();
             
 
 
-            if(usr_login.equals("admin") && usr_password.equals("admin")){
+            // if(usr_login.equals("admin") && usr_password.equals("admin")){
 
-                System.out.println("Login efetuado com sucesso!");
-                messageLoop();
+            //     System.out.println("Login efetuado com sucesso!");
+            //     messageLoop();
 
-            }
+            // }
 
-            else{
+            // else{
 
-                Integer tentativas = 0;
-                System.out.println("Login ou senha incorretos!");
-                while(tentativas < 3){
-                    System.out.println("Digite novamente o login e a senha!");
-                    login = new Login();
-                    try {
-                        Thread.sleep(10000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    logstring = login.getLogmsg();
-                    parts = logstring.split("---");
-                    usr_login = parts[1];
-                    usr_password = parts[2];
-                    if(usr_login.equals("admin") && usr_password.equals("admin")){
-                        System.out.println("Login efetuado com sucesso!");
-                        messageLoop();
-                        break;
-                    }
-                    else{
-                        tentativas++;
-                    }
-                }
+            //     Integer tentativas = 0;
+            //     System.out.println("Login ou senha incorretos!");
+            //     while(tentativas < 3){
+            //         System.out.println("Digite novamente o login e a senha!");
+            //         login = new Login();
+            //         try {
+            //             Thread.sleep(10000);
+            //         } catch (InterruptedException e) {
+            //             e.printStackTrace();
+            //         }
+            //         logstring = login.getLogmsg();
+            //         parts = logstring.split("---");
+            //         usr_login = parts[1];
+            //         usr_password = parts[2];
+            //         if(usr_login.equals("admin") && usr_password.equals("admin")){
+            //             System.out.println("Login efetuado com sucesso!");
+            //             messageLoop();
+            //             break;
+            //         }
+            //         else{
+            //             tentativas++;
+            //         }
+            //     }
 
-            }   
+            // }   
         } 
         finally {
             clientSocket.close();
@@ -176,15 +174,18 @@ public class ClienteBatepapo implements Runnable {
                 clientSocket.sendMsg(msg);
             }
         });
+
         System.out.println("Digite uma mensagem (ou <sair> para finalizar):");
+
         do
         {
             try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+                Thread.sleep(100);} 
+            catch(InterruptedException e){
+                e.printStackTrace();}
+
         } while(true);
+
     }
 
     public static void main(String args[]){
