@@ -45,6 +45,12 @@ public class ServidorBatepapo {
 
     }
 
+    //   private void sendMsgToClient(SocketCliente recipient, SocketCliente sender, String msg){
+    //     if (clients.contains(recipient) && !sender.equals(recipient)) {
+    //         recipient.sendMsg("Cliente " + sender.getRemoteSocketAddress() + ": " + msg);
+    //     }
+    // }
+
     private void sendMsgToAll(SocketCliente sender, String msg){
         Iterator<SocketCliente> iterator = clients.iterator();
         while(iterator.hasNext()){
