@@ -4,37 +4,97 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JTextField;
+
 public class ClienteBatepapo implements Runnable {
     private SocketCliente clientSocket;
     private Scanner scanner;
-    private Frame frame;
-    private TextField textField;
-    private Button button;
+    private JFrame frame;
+    private JTextField textField;
+    private JButton button;
+    private JButton saldoButton;
 
     public ClienteBatepapo(){
         scanner = new Scanner (System.in);
-        frame = new Frame("Cliente Batepapo");
-        textField = new TextField(50); // aumentando o tamanho da caixa de texto
-        button = new Button("Enviar");
+        frame = new JFrame("Cliente Batepapo");
+        textField = new JTextField(50); // aumentando o tamanho da caixa de texto
+        button = new JButton("Enviar");
+        saldoButton = new JButton("Verificas Saldo");
+
+        // adicionando WindowListener para fechar o socket e a janela
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try {
+                    clientSocket.close();
+                } finally {
+                    frame.dispose();
+                }
+            }
+        });
     }
 
-    public void start() throws IOException
-    {
-        try{
+
+    public void start() throws IOException {
+        try {
             clientSocket = new SocketCliente(new Socket(ServidorBatepapo.ADDRESS, ServidorBatepapo.PORT));
             new Thread(this).start();
+            
             Login login = new Login();
+            
             try {
-                Thread.sleep(1000000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("Login bem-sucedido: " + login.isLoginSuccessful());
-            if(login.isLoginSuccessful()){
-            messageLoop();
+
+
+            String logstring = login.getLogmsg();
+
+            String[] parts = logstring.split("---");
+            String usr_login = parts[1];
+            String usr_password = parts[2];
+
+            System.out.println(usr_login);
+            System.out.println(usr_password);
+
+            if(usr_login.equals("admin") && usr_password.equals("admin")){
+                System.out.println("Login efetuado com sucesso!");
+                messageLoop();
             }
-        }
-        finally{
+            else{
+                Integer tentativas = 0;
+                System.out.println("Login ou senha incorretos!");
+                while(tentativas < 3){
+                    System.out.println("Digite novamente o login e a senha!");
+                    login = new Login();
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    logstring = login.getLogmsg();
+                    parts = logstring.split("---");
+                    usr_login = parts[1];
+                    usr_password = parts[2];
+                    if(usr_login.equals("admin") && usr_password.equals("admin")){
+                        System.out.println("Login efetuado com sucesso!");
+                        messageLoop();
+                        break;
+                    }
+                    else{
+                        tentativas++;
+                    }
+                }
+
+
+            }
+
+
+            
+        } finally {
             clientSocket.close();
         }
     }
@@ -54,17 +114,35 @@ public class ClienteBatepapo implements Runnable {
         frame.setLayout(new FlowLayout());
         frame.add(textField);
         frame.add(button);
+        frame.add(saldoButton);
         frame.setSize(200, 100); // aumentando o tamanho da janela
         frame.setVisible(true);
-
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String msg = textField.getText();
                 clientSocket.sendMsg(msg);
                 textField.setText("");
+                if (msg.equals("sair")) {
+                    try {
+                        clientSocket.close();
+
+                    } finally {
+                        System.exit(0);
+                    }
+                }
             }
         });
+        saldoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String msg = "saldo";
+                clientSocket.sendMsg(msg);
+            }
+        });
+
 
         System.out.println("Digite uma mensagem (ou <sair> para finalizar):");
         do
@@ -90,3 +168,5 @@ public class ClienteBatepapo implements Runnable {
     }
     
 }
+
+

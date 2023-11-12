@@ -9,6 +9,7 @@ public class Login {
     private JTextField loginField;
     private JPasswordField passwordField;
     private boolean loginSuccessful;
+    private String logmsg;
 
     public Login() {
         frame = new JFrame("Login");
@@ -49,13 +50,14 @@ public class Login {
             public void actionPerformed(ActionEvent e) {
                 String user = loginField.getText();
                 String password = new String(passwordField.getPassword());
-                String logmsg = user + "---" + password; //Enviar essa mensagem ao servidor
+                logmsg = "login" + "---" + user + "---" + password; //Enviar essa mensagem ao servidor
+                frame.dispose();
             }
+            
         });
     }
 
-    
-
+    public String getLogmsg() {
+        return logmsg;
+    }
 }
-
-
