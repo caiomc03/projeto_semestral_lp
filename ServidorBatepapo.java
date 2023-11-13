@@ -53,11 +53,19 @@ public class ServidorBatepapo {
                     }
                 }
 
-                else if(msg.startsWith("sql---")){
+                else if(msg.startsWith("sqlgetbalance---")){
                     String query = msg.split("---")[1];
                     double saldo = SqlUtils.getSaldo(query,conn);
                     clientSocket.sendMsg("balance---"+saldo);
                 }
+
+                else if(msg.startsWith("sqlupdatebalance---")){
+                    String query = msg.split("---")[1];
+                    double saldo_update = SqlUtils.updateSaldo(query,conn);
+                    clientSocket.sendMsg("newbalance---"+saldo_update);
+                }
+
+
                 else{
                     System.out.printf("<- Client %s: %s\n", 
                                     clientSocket.getRemoteSocketAddress(), msg);

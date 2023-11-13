@@ -5,6 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.mysql.cj.jdbc.ClientPreparedStatement;
+import com.mysql.cj.jdbc.exceptions.SQLError;
+
 public class SqlUtils {
 
     public static Connection connect() {
@@ -67,7 +70,7 @@ public class SqlUtils {
     }
 
     public static String getSaldoQuery(String user){
-        return ("sql---Select balance from bank where user = " +"'"+ user+"'");
+        return ("sqlgetbalance---Select balance from bank where user = " +"'"+ user+"'");
     }
 
     public static double getSaldo(String query, Connection conn) {
@@ -84,28 +87,63 @@ public class SqlUtils {
         return saldo;
     }
 
-    public static boolean updateSaldoQuery(String user, double deposit, double withdraw, Connection conn){
-        double balance = getSaldo(getSaldoQuery(user),conn);
-       
+    public static String getUpdateSaldoQuery(String user, double deposit, double withdraw){
+        return ("sqlupdatebalance---UPDATE bank SET balance ="+ " -newbalance- " +" WHERE user = '" + user + "'" + "@"+deposit+ "@"+withdraw);
+    }
+
+    public static double updateSaldo(String query, Connection conn){
+        String user = query.split("=")[2].split("@")[0].replace(" ", "").replace("'","");
+        String query1 = "SELECT balance FROM bank WHERE user = '"+user+"'";
+        double balance = getSaldo(query1,conn);
+        double deposit = Double.parseDouble(query.split("@")[1]);
+        double withdraw = Double.parseDouble(query.split("@")[2]);
         double balance_update = balance + deposit - withdraw;
-        String new_balance_query = "UPDATE bank SET balance = "+ balance_update + " WHERE user = '" + user + "'";
-        if(balance_update < 0){
+
+        if (balance_update < 0) {
             System.out.println("Saldo insuficiente!");
-            return false;
-        }
-        else{
+            return 0.0;
+        } else {
+            String new_balance_query = query.replace("-newbalance-", Double.toString(balance_update)).split("@")[0];
             System.out.println("Saldo atualizado!");
+            System.out.println(query.split("=")[2].split("@")[0].replace(" ", ""));
             try (PreparedStatement pstmt = conn.prepareStatement(new_balance_query)) {
-                pstmt.executeUpdate();
+                int rowsAffected = pstmt.executeUpdate();
+                System.out.println("Linhas afetadas: " + rowsAffected);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            return true;
+            return balance_update;
         }
+
+  
    
         
     }
 
+    public static String createUserQuery(String user, String password, String fullname, String email, String cpf, String contact, Connection conn){
+        return("INSERT INTO users VALUES('"+user+"','"+password+"','"+fullname+"','"+email+"','"+cpf+"','"+contact+"')");
+    }
+
+    public static void createUser(String query,Connection conn){
+        String user = query.split("'")[1];
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+        int rowsAffected = pstmt.executeUpdate();
+        System.out.println("Linhas afetadas: " + rowsAffected);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        String querybank = "INSERT INTO bank VALUES('"+user+"',0.0)";
+        try (PreparedStatement pstmt = conn.prepareStatement(querybank)) {
+        int rowsAffected = pstmt.executeUpdate();
+        System.out.println("Linhas afetadas: " + rowsAffected);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    
 
 
 

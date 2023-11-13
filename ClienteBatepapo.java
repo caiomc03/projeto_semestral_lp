@@ -6,36 +6,74 @@ import java.net.Socket;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class ClienteBatepapo implements Runnable {
     private SocketCliente clientSocket;
  
     private JFrame frame;
+
+    JPanel panel;
+    JPanel panel1;
+    JPanel panel2;
+
+
+    //for panel1
+    private JLabel numberLabel;
     private JTextField textField;
-    private JButton button;
-    private JButton saldoButton;
+    private JButton addButton;
+
+    JButton button_VerifSaldo;
+    JButton button_Sacar;
+    JButton button_Depositar;
+    JButton button_Deletar;
+
 
     private String usr_login;
     private boolean login_sucesso = false;
-    private String logstring;
-
-
     private double balance = 0.0;
+    String logstring;
+
 
     public void setBalance(double _balance) {
         balance = _balance;
     }
-  
-
    
 
     public ClienteBatepapo(){
        
         frame = new JFrame("Cliente Batepapo");
-        textField = new JTextField(50); // aumentando o tamanho da caixa de texto
-        button = new JButton("Enviar");
-        saldoButton = new JButton("Verificar Saldo");
+        panel = new JPanel();
+
+
+        panel1 = new JPanel();
+        panel1.setLayout(new FlowLayout());
+
+        // PANEL 1
+        numberLabel = new JLabel("Saldo Conta: ---");
+        panel1.add(numberLabel);
+        textField = new JTextField(5); // 15 columns
+        panel1.add(textField);
+        addButton = new JButton("CONFIRMAR");
+        panel1.add(addButton);
+
+        panel2 = new JPanel();
+        panel2.setLayout(new FlowLayout());
+
+        button_VerifSaldo = new JButton("Verificar Saldo");
+        panel2.add(button_VerifSaldo);
+        button_Sacar = new JButton("Sacar Dinheiro");
+        panel2.add(button_Sacar);
+        button_Depositar = new JButton("Depositar");
+        panel2.add(button_Depositar);
+        button_Deletar = new JButton("Deletar Conta");
+        panel2.add(button_Deletar);
+
+        panel.add(panel1);
+        panel.add(panel2);
+
 
         // adicionando WindowListener para fechar o socket e a janela
         frame.addWindowListener(new WindowAdapter() {
@@ -112,11 +150,10 @@ public class ClienteBatepapo implements Runnable {
 
             }
 
-            else if(msg.split("---")[0].equals("balance---")){
+            else if(msg.split("---")[0].equals("balance")){
                 setBalance(Double.parseDouble(msg.split("---")[1])) ;
                 System.out.println("Seu saldo é: " + balance); 
             }
-
 
             System.out.printf("\n-> %s\n", msg);
             System.out.print("Digite uma mensagem (ou <sair> para finalizar): \n<-");
@@ -126,14 +163,16 @@ public class ClienteBatepapo implements Runnable {
     private void messageLoop() throws IOException{
 
         frame.setLayout(new FlowLayout());
-        frame.add(textField);
-        frame.add(button);
-        frame.add(saldoButton);
-        frame.setSize(600, 200); // aumentando o tamanho da janela
+
+        frame.setSize(490, 130); // aumentando o tamanho da janela
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null);
+
+
+        frame.add(panel);
        
-        button.addActionListener(new ActionListener() {
+        addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String msg = textField.getText();
@@ -149,12 +188,28 @@ public class ClienteBatepapo implements Runnable {
                 }
             }
         });
-        saldoButton.addActionListener(new ActionListener() {
+        button_VerifSaldo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            String msg = SqlUtils.getSaldoQuery(usr_login);
+                String msg = SqlUtils.getSaldoQuery(usr_login);
                 clientSocket.sendMsg(msg);
             }
+        });
+
+        button_Sacar.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        String msg = SqlUtils.getUpdateSaldoQuery(usr_login,0,20); //pegar valores de uma caixa de texto
+        clientSocket.sendMsg(msg);
+    }
+        });
+
+        button_Depositar.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        String msg = SqlUtils.getUpdateSaldoQuery(usr_login,20,0); //pegar valores de uma caixa de texto
+        clientSocket.sendMsg(msg);
+    }
         });
 
 
