@@ -2,8 +2,6 @@ package antigo;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-import ClientSocket;
-
 public class Server
 {
     public static final String ADDRESS = "127.0.0.1";
