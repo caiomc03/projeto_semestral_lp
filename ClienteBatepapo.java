@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Scanner;
+
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,17 +10,18 @@ import javax.swing.JTextField;
 
 public class ClienteBatepapo implements Runnable {
     private SocketCliente clientSocket;
-    private Scanner scanner;
+ 
     private JFrame frame;
     private JTextField textField;
     private JButton button;
     private JButton saldoButton;
 
     private String usr_login;
-    private String usr_password;
+    private boolean login_sucesso = false;
+   
 
     public ClienteBatepapo(){
-        scanner = new Scanner (System.in);
+       
         frame = new JFrame("Cliente Batepapo");
         textField = new JTextField(50); // aumentando o tamanho da caixa de texto
         button = new JButton("Enviar");
@@ -44,58 +45,75 @@ public class ClienteBatepapo implements Runnable {
         try {
             clientSocket = new SocketCliente(new Socket(ServidorBatepapo.ADDRESS, ServidorBatepapo.PORT));
             new Thread(this).start();
+
             Login login = new Login();
+
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-
             String logstring = login.getLogmsg();
-
             String[] parts = logstring.split("---");
             usr_login = parts[1];
-            usr_password = parts[2];
+            clientSocket.sendMsg(logstring); //login---
+    
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
-            System.out.println(usr_login);
-            System.out.println(usr_password);
-
-            if(usr_login.equals("admin") && usr_password.equals("admin")){
-                System.out.println("Login efetuado com sucesso!");
+            if(login_sucesso){
                 messageLoop();
             }
             else{
-                Integer tentativas = 0;
                 System.out.println("Login ou senha incorretos!");
-                while(tentativas < 3){
-                    System.out.println("Digite novamente o login e a senha!");
-                    login = new Login();
-                    try {
-                        Thread.sleep(10000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    logstring = login.getLogmsg();
-                    parts = logstring.split("---");
-                    usr_login = parts[1];
-                    usr_password = parts[2];
-                    if(usr_login.equals("admin") && usr_password.equals("admin")){
-                        System.out.println("Login efetuado com sucesso!");
-                        messageLoop();
-                        break;
-                    }
-                    else{
-                        tentativas++;
-                    }
-                }
+            }
+            
+            // System.out.printf("\n-> %s\n", msg);
+            // if (msg.equals("-> Login efetuado com sucesso!")) {
+            //     messageLoop();
+                
+            // }
+            
+
+            
+
+            // if(usr_login.equals("admin") && usr_password.equals("admin")){
+            //     System.out.println("Login efetuado com sucesso!");
+            //     messageLoop();
+            // }
+            // else{
+            //     Integer tentativas = 0;
+            //     System.out.println("Login ou senha incorretos!");
+            //     while(tentativas < 3){
+            //         System.out.println("Digite novamente o login e a senha!");
+            //         login = new Login();
+            //         try {
+            //             Thread.sleep(10000);
+            //         } catch (InterruptedException e) {
+            //             e.printStackTrace();
+            //         }
+            //         logstring = login.getLogmsg();
+            //         parts = logstring.split("---");
+            //         usr_login = parts[1];
+            //         usr_password = parts[2];
+            //         if(usr_login.equals("admin") && usr_password.equals("admin")){
+            //             System.out.println("Login efetuado com sucesso!");
+            //             messageLoop();
+            //             break;
+            //         }
+            //         else{
+            //             tentativas++;
+            //         }
+                // }
 
 
             }
-
-
-            
-        } finally {
+      
+         finally {
             clientSocket.close();
         }
     }
@@ -105,6 +123,12 @@ public class ClienteBatepapo implements Runnable {
     {
         String msg;
         while((msg = clientSocket.getMessage()) != null){
+
+            if(msg.equals("Login efetuado com sucesso!")){
+                login_sucesso = true; //trocar por um setter
+
+            }
+
             System.out.printf("\n-> %s\n", msg);
             System.out.print("Digite uma mensagem (ou <sair> para finalizar): \n<-");
         }
