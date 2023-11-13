@@ -38,14 +38,7 @@ public class ClienteBatepapo implements Runnable {
     private String usr_login;
     private boolean login_sucesso = false;
     private double balance = 0.0;
-    private String cadstring;
     private String logstring;
-    private String cad_usr;
-    private String cad_password;
-    private String cad_fullname;
-    private String cad_email;
-    private String cad_cpf;
-    private String cad_contact;
 
     CryptoDummy cdummy = new CryptoDummy();
     String dummyPath = "chave.dummy";
@@ -125,36 +118,26 @@ public class ClienteBatepapo implements Runnable {
 
             System.out.println("ready");
 
-            // while(true){
-            //     String cadstring = login.getCadString();
-            //     if (logstring != "||empty||"){
-            //         break;
-            //     }
-            // }
-
-            // cadstring = login.getCadString();
-            // String[] parts_cad = logstring.split("---");
-            // cad_usr = parts_cad[1];
-            // cad_password = parts_cad[2];
-            // cad_fullname = parts_cad[3];
-            // cad_email = parts_cad[4];
-            // cad_cpf = parts_cad[5];
-            // cad_contact = parts_cad[6];
-            // SqlUtils.createUserQuery(cad_usr, cad_password, cad_fullname, cad_email, cad_cpf, cad_contact);
-            // clientSocket.sendMsg(cadstring); //cadastro---
-
-
 
             while(true){
-                // System.out.println("looping");
-                logstring = login.getLogmsg();
-                if (logstring != "||empty||"){
-                    break;
+
+                if(login.getCadStart()){
+                    Cadastro cadastro = new Cadastro();
+                    //while loop dentro do cadastro
+                    String cadstring = cadastro.wait_for_cadastro_input();
+                    clientSocket.sendMsg(cadstring);
+                    System.out.println(cadstring);
+                    login.setCadStartFALSE();
+
+                }
+                
+                if(!login.getCadStart()){  
+                    logstring = login.getLogmsg();
+                    if (logstring != "||empty||"){
+                        break;
+                    }
                 }
             }
-
-
-
 
 
             logstring = login.getLogmsg();

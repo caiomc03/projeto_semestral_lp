@@ -5,9 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.mysql.cj.jdbc.ClientPreparedStatement;
-import com.mysql.cj.jdbc.exceptions.SQLError;
-
 public class SqlUtils {
 
     public static Connection connect() {

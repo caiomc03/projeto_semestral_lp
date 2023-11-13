@@ -8,8 +8,7 @@ public class Login {
     private JFrame frame;
     private JTextField loginField;
     private JPasswordField passwordField;
-    private String cadstring;
-    private boolean cadastroSent = false;
+    private boolean cadastroStart = false;
  
     private String logmsg;
     public Boolean loginSent = false;
@@ -67,25 +66,10 @@ public class Login {
         cadastroButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Cadastro cadastro = new Cadastro();
-                
-                // while (true) {
-                    
-                // if(cadastro.getCadmsg().equals("||empty||")){
-                //     continue;
-
-                // }
-                // else{
-                //     cadstring = cadastro.getCadmsg();
-                //     break;
-                // }
-                
-                // }
+                cadastroStart = true;
             }
         });
-    }
-
-    
+    }   
 
     public String getLogmsg(){
         if (loginSent == true){
@@ -96,7 +80,12 @@ public class Login {
         }
     }
 
-    // public String getCadString(){
-    //     return cadstring;
-    // }
+    public void setCadStartFALSE(){
+        cadastroStart = false;
+    }
+
+    public Boolean getCadStart(){
+        return cadastroStart;
+    }
+
 }

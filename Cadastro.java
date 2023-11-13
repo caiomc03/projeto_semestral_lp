@@ -104,6 +104,8 @@ public class Cadastro extends JFrame {
         cadastrarButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 cadastrar();
+                setVisible(false);
+                // System.out.println(getCadmsg());
 
             }
         });
@@ -155,5 +157,19 @@ public class Cadastro extends JFrame {
             return "||empty||";
         }
     }
-  
+    public Boolean getCadSent(){
+        return cadSent;
+    }
+    public String wait_for_cadastro_input(){
+        while(!cadSent){
+            System.out.print("");
+        }
+        return cadmsg;
+    }
+    public static void main(String args[]){
+
+        Cadastro cadastro = new Cadastro();
+        System.out.println(cadastro.wait_for_cadastro_input());
+    }
 }
+

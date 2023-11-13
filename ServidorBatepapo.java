@@ -53,11 +53,11 @@ public class ServidorBatepapo {
                     }
                 }
 
-                // else if(msg.startsWith("cadastro---")){
-                //     String query = msg.split("---")[1];
-                //     SqlUtils.createUser(query,conn);
-                //     clientSocket.sendMsg("Cadastro realizado com sucesso!");
-                // }
+                else if(msg.startsWith("cadastro---")){
+                    String query = msg.split("---")[1];
+                    SqlUtils.createUser(query,conn);
+                    clientSocket.sendMsg("Cadastro realizado com sucesso!");
+                }
 
                 else if(msg.startsWith("sqlgetbalance---")){
                     String query = msg.split("---")[1];
