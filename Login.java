@@ -8,6 +8,8 @@ public class Login {
     private JFrame frame;
     private JTextField loginField;
     private JPasswordField passwordField;
+    private String cadstring;
+    private boolean cadastroSent = false;
  
     private String logmsg;
     public Boolean loginSent = false;
@@ -58,7 +60,32 @@ public class Login {
             }
             
         });
+
+        JButton cadastroButton = new JButton("cadastro");
+        cadastroButton.setBounds(100, 80, 80, 25);
+        panel.add(cadastroButton);
+        cadastroButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Cadastro cadastro = new Cadastro();
+                
+                // while (true) {
+                    
+                // if(cadastro.getCadmsg().equals("||empty||")){
+                //     continue;
+
+                // }
+                // else{
+                //     cadstring = cadastro.getCadmsg();
+                //     break;
+                // }
+                
+                // }
+            }
+        });
     }
+
+    
 
     public String getLogmsg(){
         if (loginSent == true){
@@ -68,4 +95,8 @@ public class Login {
             return "||empty||";
         }
     }
+
+    // public String getCadString(){
+    //     return cadstring;
+    // }
 }

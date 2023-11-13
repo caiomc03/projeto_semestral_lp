@@ -32,15 +32,23 @@ public class ClienteBatepapo implements Runnable {
     JButton button_Sacar;
     JButton button_Depositar;
     JButton button_Deletar;
+    JButton button_Sair;
 
 
     private String usr_login;
     private boolean login_sucesso = false;
     private double balance = 0.0;
-    String logstring;
+    private String cadstring;
+    private String logstring;
+    private String cad_usr;
+    private String cad_password;
+    private String cad_fullname;
+    private String cad_email;
+    private String cad_cpf;
+    private String cad_contact;
 
     CryptoDummy cdummy = new CryptoDummy();
-    String dummyPath = "projeto_semestral_lp\\chave.dummy";
+    String dummyPath = "chave.dummy";
 
     byte[]   bMsgClara = null;
     byte[]   bMsgCifrada = null;
@@ -81,6 +89,8 @@ public class ClienteBatepapo implements Runnable {
         panel2.add(button_Depositar);
         button_Deletar = new JButton("Deletar Conta");
         panel2.add(button_Deletar);
+        button_Sair = new JButton("Sair");
+        panel2.add(button_Sair);
 
         panel.add(panel1);
         panel.add(panel2);
@@ -115,6 +125,26 @@ public class ClienteBatepapo implements Runnable {
 
             System.out.println("ready");
 
+            // while(true){
+            //     String cadstring = login.getCadString();
+            //     if (logstring != "||empty||"){
+            //         break;
+            //     }
+            // }
+
+            // cadstring = login.getCadString();
+            // String[] parts_cad = logstring.split("---");
+            // cad_usr = parts_cad[1];
+            // cad_password = parts_cad[2];
+            // cad_fullname = parts_cad[3];
+            // cad_email = parts_cad[4];
+            // cad_cpf = parts_cad[5];
+            // cad_contact = parts_cad[6];
+            // SqlUtils.createUserQuery(cad_usr, cad_password, cad_fullname, cad_email, cad_cpf, cad_contact);
+            // clientSocket.sendMsg(cadstring); //cadastro---
+
+
+
             while(true){
                 // System.out.println("looping");
                 logstring = login.getLogmsg();
@@ -124,13 +154,18 @@ public class ClienteBatepapo implements Runnable {
             }
 
 
+
+
+
             logstring = login.getLogmsg();
             String[] parts = logstring.split("---");
             usr_login = parts[1];
             clientSocket.sendMsg(logstring); //login---
+
+
     
             try {
-                Thread.sleep(5000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -161,7 +196,7 @@ public class ClienteBatepapo implements Runnable {
 
             }
 
-            else if(msg.split("---")[0].equals("balance")){
+            else if(msg.split("---")[0].equals("balance") || msg.split("---")[0].equals("newbalance")  ){
                 setBalance(Double.parseDouble(msg.split("---")[1]));
                 
                 if(mostrarSaldo == false){
@@ -199,6 +234,17 @@ public class ClienteBatepapo implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 String msg = textField.getText();
 
+                if (msg.equals("sair")) {
+                    try {
+                        clientSocket.close();
+                        frame.dispose();
+                        Thread.interrupted();
+
+                    } finally {
+                        System.exit(0);
+                    }
+                }
+
                 try{
                     bMsgClara = msg.getBytes("ISO-8859-1");
                     cdummy.geraCifra(bMsgClara, new File (dummyPath));
@@ -211,14 +257,7 @@ public class ClienteBatepapo implements Runnable {
 
                 clientSocket.sendMsg(msg);
                 textField.setText("");
-                if (msg.equals("sair")) {
-                    try {
-                        clientSocket.close();
-
-                    } finally {
-                        System.exit(0);
-                    }
-                }
+  
             }
         });
         button_VerifSaldo.addActionListener(new ActionListener() {
@@ -236,21 +275,42 @@ public class ClienteBatepapo implements Runnable {
 
             }
         });
+            button_Sair.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String msg = "sair";
+                clientSocket.sendMsg(msg);
+            }
+        });
         button_Sacar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String msg = SqlUtils.getUpdateSaldoQuery(usr_login,0,20); //pegar valores de uma caixa de texto
+                double value;
+                String text = textField.getText();
+                if (text.equals("")) {
+                    value = 0;
+                } else {
+                    value = Double.parseDouble(text);
+                }
+                String msg = SqlUtils.getUpdateSaldoQuery(usr_login, 0, value); //pegar valores de uma caixa de texto
                 clientSocket.sendMsg(msg);
             }
         });
         button_Depositar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String msg = SqlUtils.getUpdateSaldoQuery(usr_login,20,0); //pegar valores de uma caixa de texto
+                double value;
+                String text = textField.getText();
+                if (text.equals("")) {
+                    value = 0;
+                } else {
+                    value = Double.parseDouble(text);
+                }
+                String msg = SqlUtils.getUpdateSaldoQuery(usr_login,value,0); //pegar valores de uma caixa de texto
                 clientSocket.sendMsg(msg);
             }
         });
-        System.out.println("Digite uma mensagem (ou <sair> para finalizar):");
+        
         do
         {
             try {

@@ -120,7 +120,7 @@ public class SqlUtils {
         
     }
 
-    public static String createUserQuery(String user, String password, String fullname, String email, String cpf, String contact, Connection conn){
+    public static String createUserQuery(String user, String password, String fullname, String email, String cpf, String contact){
         return("INSERT INTO users VALUES('"+user+"','"+password+"','"+fullname+"','"+email+"','"+cpf+"','"+contact+"')");
     }
 
@@ -142,8 +142,6 @@ public class SqlUtils {
         }
 
     }
-
-    
 
 
 
