@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.sql.Connection;
@@ -38,6 +39,8 @@ public class ServidorBatepapo {
 
     private void clientMessageLoop(SocketCliente clientSocket){
         String msg;
+        CryptoDummy cdummy = new CryptoDummy();
+        String dummyPath = "chave.dummy";
         try
         {
             while((msg = clientSocket.getMessage()) != null){
@@ -45,6 +48,13 @@ public class ServidorBatepapo {
 
                 else if(msg.startsWith("login---")){
                     String[] login = msg.split("---");
+
+                    try{
+                    login[1] = cdummy.autoDecifra(login[1], new File(dummyPath));
+                    login[2] = cdummy.autoDecifra(login[2], new File(dummyPath));
+                    }catch(Exception e){}
+
+
                     if(SqlUtils.verifyPassword(conn, login[1],login[2])){
                         clientSocket.sendMsg("Login efetuado com sucesso!");
                     }

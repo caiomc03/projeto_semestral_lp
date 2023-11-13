@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
@@ -169,6 +170,7 @@ public class ClienteBatepapo implements Runnable {
             while(true){
 
                 if(login.getCadStart()){
+                    //aqui calvetti
                     Cadastro cadastro = new Cadastro();
                     //while loop dentro do cadastro
                     String cadstring = cadastro.wait_for_cadastro_input();
@@ -186,10 +188,16 @@ public class ClienteBatepapo implements Runnable {
                 }
             }
 
-
+            //aqui calvetti
             logstring = login.getLogmsg();
             String[] parts = logstring.split("---");
             usr_login = parts[1];
+            try{
+            logstring = parts[0] + "---" + (cdummy.autoCifra(parts[1], new File(dummyPath))) + "---" + (cdummy.autoCifra(parts[2], new File(dummyPath)));
+            }
+            catch(Exception e){
+            }
+
             clientSocket.sendMsg(logstring); //login---
 
 
