@@ -18,6 +18,7 @@ public class ClienteBatepapo implements Runnable {
 
     private String usr_login;
     private boolean login_sucesso = false;
+    private String logstring;
 
 
     private double balance = 0.0;
