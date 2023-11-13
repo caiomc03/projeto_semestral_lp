@@ -19,11 +19,14 @@ public class ClienteBatepapo implements Runnable {
     private String usr_login;
     private boolean login_sucesso = false;
 
+
     private double balance = 0.0;
 
     public void setBalance(double _balance) {
         balance = _balance;
     }
+  
+
    
 
     public ClienteBatepapo(){
@@ -55,12 +58,23 @@ public class ClienteBatepapo implements Runnable {
             Login login = new Login();
 
             try {
-                Thread.sleep(5000);
+                Thread.sleep(4000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            String logstring = login.getLogmsg();
+            System.out.println("ready");
+
+            while(true){
+                // System.out.println("looping");
+                logstring = login.getLogmsg();
+                if (logstring != "||empty||"){
+                    break;
+                }
+            }
+
+
+            logstring = login.getLogmsg();
             String[] parts = logstring.split("---");
             usr_login = parts[1];
             clientSocket.sendMsg(logstring); //login---

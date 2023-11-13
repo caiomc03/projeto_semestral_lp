@@ -10,6 +10,7 @@ public class Login {
     private JPasswordField passwordField;
  
     private String logmsg;
+    public Boolean loginSent = false;
 
     public Login() {
         frame = new JFrame("Login");
@@ -51,6 +52,7 @@ public class Login {
                 String user = loginField.getText();
                 String password = new String(passwordField.getPassword());
                 logmsg = "login" + "---" + user + "---" + password; //Enviar essa mensagem ao servidor
+                loginSent = true;
                 frame.dispose();
                 
             }
@@ -58,7 +60,12 @@ public class Login {
         });
     }
 
-    public String getLogmsg() {
-        return logmsg;
+    public String getLogmsg(){
+        if (loginSent == true){
+            return logmsg;
+        }
+        else{
+            return "||empty||";
+        }
     }
 }
