@@ -43,7 +43,7 @@ public class ServidorBatepapo {
             while((msg = clientSocket.getMessage()) != null){
                 if("sair".equalsIgnoreCase(msg)) return;
 
-                if(msg.startsWith("login---")){
+                else if(msg.startsWith("login---")){
                     String[] login = msg.split("---");
                     if(SqlUtils.verifyPassword(conn, login[1],login[2])){
                         clientSocket.sendMsg("Login efetuado com sucesso!");
@@ -51,6 +51,12 @@ public class ServidorBatepapo {
                     else{
                         clientSocket.sendMsg("Login ou senha incorretos!");
                     }
+                }
+
+                else if(msg.startsWith("sql---")){
+                    String query = msg.split("---")[1];
+                    double saldo = SqlUtils.getSaldo(query,conn);
+                    clientSocket.sendMsg("balance---"+saldo);
                 }
                 else{
                     System.out.printf("<- Client %s: %s\n", 
