@@ -92,44 +92,6 @@ public class ClienteBatepapo implements Runnable {
             else{
                 System.out.println("Login ou senha incorretos!");
             }
-            
-            // System.out.printf("\n-> %s\n", msg);
-            // if (msg.equals("-> Login efetuado com sucesso!")) {
-            //     messageLoop();
-                
-            // }
-            
-
-            
-
-            // if(usr_login.equals("admin") && usr_password.equals("admin")){
-            //     System.out.println("Login efetuado com sucesso!");
-            //     messageLoop();
-            // }
-            // else{
-            //     Integer tentativas = 0;
-            //     System.out.println("Login ou senha incorretos!");
-            //     while(tentativas < 3){
-            //         System.out.println("Digite novamente o login e a senha!");
-            //         login = new Login();
-            //         try {
-            //             Thread.sleep(10000);
-            //         } catch (InterruptedException e) {
-            //             e.printStackTrace();
-            //         }
-            //         logstring = login.getLogmsg();
-            //         parts = logstring.split("---");
-            //         usr_login = parts[1];
-            //         usr_password = parts[2];
-            //         if(usr_login.equals("admin") && usr_password.equals("admin")){
-            //             System.out.println("Login efetuado com sucesso!");
-            //             messageLoop();
-            //             break;
-            //         }
-            //         else{
-            //             tentativas++;
-            //         }
-                // }
 
 
             }
@@ -167,7 +129,7 @@ public class ClienteBatepapo implements Runnable {
         frame.add(textField);
         frame.add(button);
         frame.add(saldoButton);
-        frame.setSize(200, 100); // aumentando o tamanho da janela
+        frame.setSize(600, 200); // aumentando o tamanho da janela
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        
