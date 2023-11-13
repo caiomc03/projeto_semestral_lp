@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -38,6 +39,13 @@ public class ClienteBatepapo implements Runnable {
     private double balance = 0.0;
     String logstring;
 
+    CryptoDummy cdummy = new CryptoDummy();
+    String dummyPath = "projeto_semestral_lp\\chave.dummy";
+
+    byte[]   bMsgClara = null;
+    byte[]   bMsgCifrada = null;
+
+
 
     public void setBalance(double _balance) {
         balance = _balance;
@@ -45,6 +53,7 @@ public class ClienteBatepapo implements Runnable {
    
 
     public ClienteBatepapo(){
+
        
         frame = new JFrame("Cliente Batepapo");
         panel = new JPanel();
@@ -182,12 +191,24 @@ public class ClienteBatepapo implements Runnable {
 
         frame.add(panel);
 
-        
+        cdummy = new CryptoDummy();
+
        
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String msg = textField.getText();
+
+                try{
+                    bMsgClara = msg.getBytes("ISO-8859-1");
+                    cdummy.geraCifra(bMsgClara, new File (dummyPath));
+                    bMsgCifrada = cdummy.getTextoCifrado();
+                    msg = (new String (bMsgCifrada, "ISO-8859-1"));
+                }
+                catch(Exception er){
+                    System.out.println(er);
+                }
+
                 clientSocket.sendMsg(msg);
                 textField.setText("");
                 if (msg.equals("sair")) {
