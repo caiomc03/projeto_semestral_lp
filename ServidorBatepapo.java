@@ -48,7 +48,7 @@ public class ServidorBatepapo {
 
                 else if(msg.startsWith("login---")){
                     String[] login = msg.split("---");
-
+                    //aqui calvetti
                     try{
                     login[1] = cdummy.autoDecifra(login[1], new File(dummyPath));
                     login[2] = cdummy.autoDecifra(login[2], new File(dummyPath));
