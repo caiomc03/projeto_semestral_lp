@@ -15,6 +15,7 @@ public class ClienteBatepapo implements Runnable {
     private JTextField textField;
     private JButton button;
     private JButton saldoButton;
+    private JButton updateSaldoButton;
 
     private String usr_login;
     private boolean login_sucesso = false;
@@ -36,6 +37,7 @@ public class ClienteBatepapo implements Runnable {
         textField = new JTextField(50); // aumentando o tamanho da caixa de texto
         button = new JButton("Enviar");
         saldoButton = new JButton("Verificar Saldo");
+        updateSaldoButton = new JButton("Atualiza Saldo");
 
         // adicionando WindowListener para fechar o socket e a janela
         frame.addWindowListener(new WindowAdapter() {
@@ -49,7 +51,6 @@ public class ClienteBatepapo implements Runnable {
             }
         });
     }
-
 
     public void start() throws IOException {
         try {
@@ -167,6 +168,7 @@ public class ClienteBatepapo implements Runnable {
         frame.add(textField);
         frame.add(button);
         frame.add(saldoButton);
+        frame.add(updateSaldoButton);
         frame.setSize(200, 100); // aumentando o tamanho da janela
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -191,6 +193,14 @@ public class ClienteBatepapo implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
             String msg = SqlUtils.getSaldoQuery(usr_login);
+                clientSocket.sendMsg(msg);
+            }
+        });
+
+        updateSaldoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            String msg = SqlUtils.getUpdateSaldoQuery(usr_login,20,0); //pegar valores de uma caixa de texto
                 clientSocket.sendMsg(msg);
             }
         });
