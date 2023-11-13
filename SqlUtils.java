@@ -67,7 +67,47 @@ public class SqlUtils {
     }
 
     public static String getSaldoQuery(String user){
-        return ("Select saldo from usuarios where user = " + user);
+        return ("sql---Select balance from bank where user = " +"'"+ user+"'");
     }
+
+    public static double getSaldo(String query, Connection conn) {
+        double saldo = 0.0;
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                saldo = rs.getDouble("balance") ;
+                System.out.println("Saldo: " + saldo);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return saldo;
+    }
+
+    public static boolean updateSaldoQuery(String user, double deposit, double withdraw, Connection conn){
+        double balance = getSaldo(getSaldoQuery(user),conn);
+       
+        double balance_update = balance + deposit - withdraw;
+        String new_balance_query = "UPDATE bank SET balance = "+ balance_update + " WHERE user = '" + user + "'";
+        if(balance_update < 0){
+            System.out.println("Saldo insuficiente!");
+            return false;
+        }
+        else{
+            System.out.println("Saldo atualizado!");
+            try (PreparedStatement pstmt = conn.prepareStatement(new_balance_query)) {
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return true;
+        }
+   
+        
+    }
+
+
+
+
 }
     

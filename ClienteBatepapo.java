@@ -18,6 +18,12 @@ public class ClienteBatepapo implements Runnable {
 
     private String usr_login;
     private boolean login_sucesso = false;
+
+    private double balance = 0.0;
+
+    public void setBalance(double _balance) {
+        balance = _balance;
+    }
    
 
     public ClienteBatepapo(){
@@ -128,6 +134,12 @@ public class ClienteBatepapo implements Runnable {
                 login_sucesso = true; //trocar por um setter
 
             }
+
+            else if(msg.split("---")[0].equals("balance---")){
+                setBalance(Double.parseDouble(msg.split("---")[1])) ;
+                System.out.println("Seu saldo é: " + balance); 
+            }
+
 
             System.out.printf("\n-> %s\n", msg);
             System.out.print("Digite uma mensagem (ou <sair> para finalizar): \n<-");
