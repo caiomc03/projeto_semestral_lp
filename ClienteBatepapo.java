@@ -162,7 +162,7 @@ public class ClienteBatepapo implements Runnable {
                     numberLabel.setText("Saldo Conta: " + balance);
                 }
                 
-                // System.out.println("Seu saldo é: " + balance); 
+                System.out.println("Seu saldo é: " + balance); 
             }
 
             System.out.printf("\n-> %s\n", msg);

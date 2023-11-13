@@ -61,7 +61,7 @@ public class ServidorBatepapo {
 
                 else if(msg.startsWith("sqlupdatebalance---")){
                     String query = msg.split("---")[1];
-                    double saldo_update = SqlUtils.updateSaldo(query,conn);
+                    double saldo_update = SqlUtils.updateSaldo(query, conn, clientSocket);
                     clientSocket.sendMsg("newbalance---"+saldo_update);
                 }
 

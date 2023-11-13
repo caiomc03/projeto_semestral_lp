@@ -91,7 +91,7 @@ public class SqlUtils {
         return ("sqlupdatebalance---UPDATE bank SET balance ="+ " -newbalance- " +" WHERE user = '" + user + "'" + "@"+deposit+ "@"+withdraw);
     }
 
-    public static double updateSaldo(String query, Connection conn){
+    public static double updateSaldo(String query, Connection conn, SocketCliente sender){
         String user = query.split("=")[2].split("@")[0].replace(" ", "").replace("'","");
         String query1 = "SELECT balance FROM bank WHERE user = '"+user+"'";
         double balance = getSaldo(query1,conn);
@@ -100,7 +100,7 @@ public class SqlUtils {
         double balance_update = balance + deposit - withdraw;
 
         if (balance_update < 0) {
-            System.out.println("Saldo insuficiente!");
+            System.out.println(sender.getRemoteSocketAddress() + ": Saldo insuficiente!");
             return 0.0;
         } else {
             String new_balance_query = query.replace("-newbalance-", Double.toString(balance_update)).split("@")[0];
