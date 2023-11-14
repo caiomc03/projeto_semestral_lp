@@ -54,7 +54,6 @@ public class ClienteBatepapo implements Runnable {
         balance = _balance;
     }
    
-
     public ClienteBatepapo(){
 
        
@@ -109,7 +108,6 @@ public class ClienteBatepapo implements Runnable {
             }
         });
     }
-
 
     public void start() throws IOException {
         try {
@@ -186,6 +184,13 @@ public class ClienteBatepapo implements Runnable {
                 login_sucesso = true; //trocar por um setter
 
             }
+            else if(msg.equals("---delete---")  ){
+                System.out.println(msg.split("---")[0]);
+                System.out.println("Conta deletada com sucesso!");
+                frame.dispose();
+                System.exit(0);
+
+            }
 
             else if(msg.split("---")[0].equals("balance") || msg.split("---")[0].equals("newbalance")  ){
                 setBalance(Double.parseDouble(msg.split("---")[1]));
@@ -219,6 +224,13 @@ public class ClienteBatepapo implements Runnable {
 
         cdummy = new CryptoDummy();
 
+     button_Deletar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String msg = "sqldeleteuser---" + usr_login ;
+                clientSocket.sendMsg(msg);
+            }
+        });
        
         addButton.addActionListener(new ActionListener() {
             @Override

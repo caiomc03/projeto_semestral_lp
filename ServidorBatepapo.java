@@ -73,13 +73,23 @@ public class ServidorBatepapo {
                     double saldo = SqlUtils.getSaldo(query,conn);
                     clientSocket.sendMsg("balance---"+saldo);
                 }
+                else if(msg.startsWith("sqldeleteuser---")){
+                    String user_del = msg.split("---")[1];
+                    SqlUtils.deleteUser(user_del,conn);
+                    try {
+                        clientSocket.sendMsg("---delete---");
+                        clientSocket.close();;
+                        serverSocket.close();
+                    } catch (IOException e) {
+                        System.err.println("Error closing server socket: " + e.getMessage());
+                    }
+                }
 
                 else if(msg.startsWith("sqlupdatebalance---")){
                     String query = msg.split("---")[1];
                     double saldo_update = SqlUtils.updateSaldo(query, conn, clientSocket);
                     clientSocket.sendMsg("newbalance---"+saldo_update);
                 }
-
 
                 else{
                     System.out.printf("<- Client %s: %s\n", 

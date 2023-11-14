@@ -113,10 +113,7 @@ public class SqlUtils {
             }
             return balance_update;
         }
-
-  
-   
-        
+    
     }
 
     public static String createUserQuery(String user, String password, String fullname, String email, String cpf, String contact, String gender){
@@ -142,6 +139,25 @@ public class SqlUtils {
 
     }
 
+    public static void deleteUser(String user, Connection conn) {
+        try {
+            // Delete user from bank table
+            String deleteBankQuery = "DELETE FROM bank WHERE user = ?";
+            PreparedStatement deleteBankStmt = conn.prepareStatement(deleteBankQuery);
+            deleteBankStmt.setString(1, user);
+            int bankRowsAffected = deleteBankStmt.executeUpdate();
+            System.out.println("Linhas afetadas na tabela bank: " + bankRowsAffected);
+
+            // Delete user from users table
+            String deleteUserQuery = "DELETE FROM users WHERE user = ?";
+            PreparedStatement deleteUserStmt = conn.prepareStatement(deleteUserQuery);
+            deleteUserStmt.setString(1, user);
+            int userRowsAffected = deleteUserStmt.executeUpdate();
+            System.out.println("Linhas afetadas na tabela users: " + userRowsAffected);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

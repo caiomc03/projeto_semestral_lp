@@ -44,9 +44,7 @@ public   class CryptoDummy
       {  textoCifrado[i] = (byte) (textoCifrado[i] + i + iDummy);
       }
    }
-
-
-   
+  
    public  String  autoDecifra(String texto, File fDummy)
    	throws   IOException, ClassNotFoundException
    {  
@@ -69,8 +67,6 @@ public   class CryptoDummy
       {  textoDecifrado[i] = (byte) (textoDecifrado[i] - i - iDummy);
       }
    }
-
-
 
       public  byte[]   getTextoCifrado() throws   Exception
    {  return   textoCifrado;
