@@ -3,7 +3,8 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -88,6 +89,10 @@ public class ClienteBatepapo implements Runnable {
         panel.add(panel1);
         panel.add(panel2);
 
+        // adicionando data no canto superior direito do frame
+        JLabel dateLabel = new JLabel(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
+        dateLabel.setHorizontalAlignment(JLabel.RIGHT);
+        frame.add(dateLabel, BorderLayout.NORTH);
 
         // adicionando WindowListener para fechar o socket e a janela
         frame.addWindowListener(new WindowAdapter() {
@@ -317,5 +322,3 @@ public class ClienteBatepapo implements Runnable {
     }
     
 }
-
-
