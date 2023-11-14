@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
@@ -9,7 +8,12 @@ import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 
 public class ClienteBatepapo implements Runnable {
@@ -25,8 +29,6 @@ public class ClienteBatepapo implements Runnable {
     //for panel1
     private JLabel numberLabel;
     private JTextField textField;
-    private JButton addButton;
-
 
     Boolean mostrarSaldo = false;
     JButton button_VerifSaldo;
@@ -36,11 +38,17 @@ public class ClienteBatepapo implements Runnable {
     JButton button_Sair;
     JButton button_GerarBoleto;
 
-
     private String usr_login;
     private boolean login_sucesso = false;
     private double balance = 0.0;
     private String logstring;
+
+    private String usuario;
+    private String nomeCompleto;
+    private String email;
+    private String cpf;
+    private String contato;
+    private String genero;
 
     CryptoDummy cdummy = new CryptoDummy();
     String dummyPath = "chave.dummy";
@@ -57,7 +65,7 @@ public class ClienteBatepapo implements Runnable {
     public ClienteBatepapo(){
 
        
-        frame = new JFrame("Cliente Batepapo");
+        frame = new JFrame("Cliente ");
         panel = new JPanel();
 
 
@@ -69,8 +77,7 @@ public class ClienteBatepapo implements Runnable {
         panel1.add(numberLabel);
         textField = new JTextField(5); // 15 columns
         panel1.add(textField);
-        addButton = new JButton("CONFIRMAR");
-        panel1.add(addButton);
+        
 
         panel2 = new JPanel();
         panel2.setLayout(new FlowLayout());
@@ -81,12 +88,12 @@ public class ClienteBatepapo implements Runnable {
         panel2.add(button_Sacar);
         button_Depositar = new JButton("Depositar");
         panel2.add(button_Depositar);
-        button_Deletar = new JButton("Deletar Conta");
-        panel2.add(button_Deletar);
-        button_Sair = new JButton("Sair");
-        panel2.add(button_Sair);
         button_GerarBoleto = new JButton("Gerar Boleto");
         panel2.add(button_GerarBoleto);
+        button_Sair = new JButton("Sair");
+        panel2.add(button_Sair);
+        button_Deletar = new JButton("Deletar Conta");
+        panel2.add(button_Deletar);
 
         panel.add(panel1);
         panel.add(panel2);
@@ -107,6 +114,40 @@ public class ClienteBatepapo implements Runnable {
                 }
             }
         });
+
+        // adicionando JMenu com botão "Profile"
+        JMenuBar menuBar = new JMenuBar();
+        JMenu menu = new JMenu("Menu");
+        JMenuItem profileItem = new JMenuItem("Profile");
+        profileItem.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                clientSocket.sendMsg("sqlgetall---"+usr_login);
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+
+                
+                String[] colunas = {"Nome de usuario","Nome Completo", "Email", "CPF", "Telefone", "Genero"};
+                Object[][] dados = {
+                    {usuario,nomeCompleto,email,cpf,contato,genero},
+                };
+                JTable table = new JTable(dados, colunas);
+
+                
+                JFrame frame = new JFrame("Informações do usuario");
+                frame.add(new JScrollPane(table));
+                frame.setSize(800, 100); // set the size of the frame
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+            }
+
+        });
+        menu.add(profileItem);
+        menuBar.add(menu);
+        frame.setJMenuBar(menuBar);
     }
 
     public void start() throws IOException {
@@ -205,6 +246,17 @@ public class ClienteBatepapo implements Runnable {
                 System.out.println("Seu saldo é: " + balance); 
             }
 
+            else if(msg.split("---")[0].equals("profile")){
+                System.out.println(msg);
+                usuario = msg.split("---")[1];
+                nomeCompleto = msg.split("---")[2];
+                email = msg.split("---")[3];
+                cpf = msg.split("---")[4];
+                contato = msg.split("---")[5];
+                genero = msg.split("---")[6];
+
+            }
+
             System.out.printf("\n-> %s\n", msg);
             System.out.print("Digite uma mensagem (ou <sair> para finalizar): \n<-");
         }
@@ -214,7 +266,7 @@ public class ClienteBatepapo implements Runnable {
 
         frame.setLayout(new FlowLayout());
 
-        frame.setSize(490, 130); // aumentando o tamanho da janela
+        frame.setSize(1000, 200); // aumentando o tamanho da janela
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -229,40 +281,11 @@ public class ClienteBatepapo implements Runnable {
             public void actionPerformed(ActionEvent e) {
                 String msg = "sqldeleteuser---" + usr_login ;
                 clientSocket.sendMsg(msg);
+                System.exit(0);
             }
         });
        
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String msg = textField.getText();
-
-                if (msg.equals("sair")) {
-                    try {
-                        clientSocket.close();
-                        frame.dispose();
-                        Thread.interrupted();
-
-                    } finally {
-                        System.exit(0);
-                    }
-                }
-
-                try{
-                    bMsgClara = msg.getBytes("ISO-8859-1");
-                    cdummy.geraCifra(bMsgClara, new File (dummyPath));
-                    bMsgCifrada = cdummy.getTextoCifrado();
-                    msg = (new String (bMsgCifrada, "ISO-8859-1"));
-                }
-                catch(Exception er){
-                    System.out.println(er);
-                }
-
-                clientSocket.sendMsg(msg);
-                textField.setText("");
-  
-            }
-        });
+        
         button_VerifSaldo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -278,11 +301,12 @@ public class ClienteBatepapo implements Runnable {
 
             }
         });
-            button_Sair.addActionListener(new ActionListener() {
+        button_Sair.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String msg = "sair";
-                clientSocket.sendMsg(msg);
+              frame.dispose();
+              System.exit(0);
+
             }
         });
         button_Sacar.addActionListener(new ActionListener() {
@@ -334,7 +358,7 @@ public class ClienteBatepapo implements Runnable {
                 boletoPanel.add(boletoFieldValor);
                 boletoPanel.add(boletoButtonGerar);
                 boletoFrame.add(boletoPanel);
-                boletoFrame.setSize(200, 150);
+                boletoFrame.setSize(220,280);
                 boletoFrame.setVisible(true);
                 boletoFrame.setLocationRelativeTo(null);
 

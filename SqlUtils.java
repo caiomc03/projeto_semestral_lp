@@ -159,6 +159,28 @@ public class SqlUtils {
         }
     }
 
+    public static String getProfile(String user, Connection conn) {
+        String query = "SELECT * FROM users WHERE user = ?";
+        String result = "";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, user);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                result +=  rs.getString("user");
+                result += "---" + rs.getString("fullname") ;
+                result += "---" + rs.getString("email");
+                result += "---" + rs.getString("cpf") ;
+                result += "---" + rs.getString("contact") ;
+                result += "---" + rs.getString("gender") ;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 
 }
     

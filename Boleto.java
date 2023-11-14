@@ -31,8 +31,5 @@ public class Boleto {
         }
     }
 
-    public static void main(String args[]){
-        Boleto boleto = new Boleto("Joao", "Maria", 1000);
-        boleto.gerarArquivo();
-    }
+
 }

@@ -23,6 +23,7 @@ public class Login {
         placeComponents(panel);
 
         frame.setVisible(true);
+        frame.setLocationRelativeTo(null); // centraliza o JFrame na tela
     }
 
     private void placeComponents(JPanel panel) {
@@ -61,7 +62,7 @@ public class Login {
         });
 
         JButton cadastroButton = new JButton("cadastro");
-        cadastroButton.setBounds(100, 80, 80, 25);
+        cadastroButton.setBounds(100, 80, 120, 25);
         panel.add(cadastroButton);
         cadastroButton.addActionListener(new ActionListener() {
             @Override
