@@ -54,7 +54,15 @@ public class ServidorBatepapo {
                 }
 
                 else if(msg.startsWith("cadastro---")){
-                    String query = msg.split("---")[1];
+                    String cad_usr = msg.split("---")[1];
+                    String cad_password = msg.split("---")[2];
+                    String cad_fullname = msg.split("---")[3];  
+                    String cad_email = msg.split("---")[4];
+                    String cad_cpf = msg.split("---")[5];
+                    String cad_contact = msg.split("---")[6];
+                    String query = SqlUtils.createUserQuery(cad_usr,cad_password,cad_fullname,cad_email,cad_cpf,cad_contact);
+
+
                     SqlUtils.createUser(query,conn);
                     clientSocket.sendMsg("Cadastro realizado com sucesso!");
                 }
