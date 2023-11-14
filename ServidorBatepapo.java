@@ -60,7 +60,8 @@ public class ServidorBatepapo {
                     String cad_email = msg.split("---")[4];
                     String cad_cpf = msg.split("---")[5];
                     String cad_contact = msg.split("---")[6];
-                    String query = SqlUtils.createUserQuery(cad_usr,cad_password,cad_fullname,cad_email,cad_cpf,cad_contact);
+                    String cad_gender = msg.split("---")[7];
+                    String query = SqlUtils.createUserQuery(cad_usr,cad_password,cad_fullname,cad_email,cad_cpf,cad_contact,cad_gender);
 
 
                     SqlUtils.createUser(query,conn);

@@ -1,5 +1,3 @@
-
-import java.util.Scanner;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -13,6 +11,7 @@ public class Cadastro extends JFrame {
     private JTextField cpfField;
     private JTextField contatoField;
     private JTextField emailField;
+    private JComboBox<String> generoComboBox; // Adicionando o JComboBox para selecionar o gênero
     private String cadmsg;
     public Boolean cadSent = false;
 
@@ -40,6 +39,10 @@ public class Cadastro extends JFrame {
 
         JLabel emailLabel = new JLabel("E-mail:");
         emailField = new JTextField(20);
+
+        JLabel generoLabel = new JLabel("Gênero:");
+        String[] generos = {"Masculino", "Feminino", "Outros"}; // Opções do JComboBox
+        generoComboBox = new JComboBox<>(generos);
 
         JButton cadastrarButton = new JButton("Cadastrar");
 
@@ -95,8 +98,15 @@ public class Cadastro extends JFrame {
         c.gridx = 1;
         c.anchor = GridBagConstraints.LINE_START;
         add(emailField, c);
-        c.gridx = 1;
+        c.gridx = 0;
         c.gridy = 7;
+        c.anchor = GridBagConstraints.LINE_END;
+        add(generoLabel, c);
+        c.gridx = 1;
+        c.anchor = GridBagConstraints.LINE_START;
+        add(generoComboBox, c);
+        c.gridx = 1;
+        c.gridy = 8;
         c.anchor = GridBagConstraints.CENTER;
         add(cadastrarButton, c);
 
@@ -127,6 +137,7 @@ public class Cadastro extends JFrame {
         String cpf = cpfField.getText();
         String contato = contatoField.getText();
         String email = emailField.getText();
+        String genero = (String) generoComboBox.getSelectedItem(); // Obtendo o valor selecionado no JComboBox
 
         // Valida os campos de texto
         if (usuario.isEmpty() || senha.isEmpty() || confirmarSenha.isEmpty() || nomeCompleto.isEmpty() || cpf.isEmpty() || contato.isEmpty() || email.isEmpty()) {
@@ -143,7 +154,7 @@ public class Cadastro extends JFrame {
         else{
         JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         dispose();
-        cadmsg = "cadastro" + "---" + usuario + "---" + senha + "---" + nomeCompleto + "---" + email + "---" + cpf + "---" + contato;
+        cadmsg = "cadastro" + "---" + usuario + "---" + senha + "---" + nomeCompleto + "---" + email + "---" + cpf + "---" + contato + "---" + genero; // Adicionando o gênero na mensagem de cadastro
         cadSent = true;
         }
     }
@@ -172,4 +183,3 @@ public class Cadastro extends JFrame {
         System.out.println(cadastro.wait_for_cadastro_input());
     }
 }
-

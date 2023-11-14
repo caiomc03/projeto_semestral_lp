@@ -25,7 +25,9 @@ public class SqlUtils {
                             "fullname VARCHAR(255) , " +
                             "email VARCHAR(255) , " +
                             "cpf VARCHAR(255) , " +
-                            "contact VARCHAR(255))";
+                            "contact VARCHAR(255), " +
+                            "gender VARCHAR(255)"+ 
+                            ")";
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sqlCreate);
         } catch (SQLException e) {
@@ -117,8 +119,8 @@ public class SqlUtils {
         
     }
 
-    public static String createUserQuery(String user, String password, String fullname, String email, String cpf, String contact){
-        return("INSERT INTO users VALUES('"+user+"','"+password+"','"+fullname+"','"+email+"','"+cpf+"','"+contact+"')");
+    public static String createUserQuery(String user, String password, String fullname, String email, String cpf, String contact, String gender){
+        return("INSERT INTO users VALUES('"+user+"','"+password+"','"+fullname+"','"+email+"','"+cpf+"','"+contact+"','"+gender+"')");
     }
 
     public static void createUser(String query,Connection conn){
