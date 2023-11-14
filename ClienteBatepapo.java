@@ -34,6 +34,7 @@ public class ClienteBatepapo implements Runnable {
     JButton button_Depositar;
     JButton button_Deletar;
     JButton button_Sair;
+    JButton button_GerarBoleto;
 
 
     private String usr_login;
@@ -85,6 +86,8 @@ public class ClienteBatepapo implements Runnable {
         panel2.add(button_Deletar);
         button_Sair = new JButton("Sair");
         panel2.add(button_Sair);
+        button_GerarBoleto = new JButton("Gerar Boleto");
+        panel2.add(button_GerarBoleto);
 
         panel.add(panel1);
         panel.add(panel2);
@@ -298,6 +301,46 @@ public class ClienteBatepapo implements Runnable {
                 clientSocket.sendMsg(msg);
             }
         });
+        button_GerarBoleto.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFrame boletoFrame = new JFrame("Gerar Boleto");
+                JPanel boletoPanel = new JPanel();
+                JLabel boletoLabelPagador = new JLabel("Pagador:");
+                JLabel boletoLabelRecebedor = new JLabel("Recebedor:");
+                JLabel boletoLabelValor = new JLabel("Valor:");
+                JTextField boletoFieldPagador = new JTextField(20);
+                JTextField boletoFieldRecebedor = new JTextField(20);
+                JTextField boletoFieldValor = new JTextField(20);
+                JButton boletoButtonGerar = new JButton("Gerar Boleto");
+
+                boletoPanel.add(boletoLabelPagador);
+                boletoPanel.add(boletoFieldPagador);
+                boletoPanel.add(boletoLabelRecebedor);
+                boletoPanel.add(boletoFieldRecebedor);
+                boletoPanel.add(boletoLabelValor);
+                boletoPanel.add(boletoFieldValor);
+                boletoPanel.add(boletoButtonGerar);
+                boletoFrame.add(boletoPanel);
+                boletoFrame.setSize(200, 150);
+                boletoFrame.setVisible(true);
+                boletoFrame.setLocationRelativeTo(null);
+
+                boletoButtonGerar.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String pagador = boletoFieldPagador.getText();
+                    String recebedor = boletoFieldRecebedor.getText();
+                    double valor = Double.parseDouble(boletoFieldValor.getText());
+                    Boleto boleto = new Boleto(pagador, recebedor, valor);
+                    boleto.gerarArquivo();
+                    boletoFrame.dispose();
+                    
+                }
+                });
+            }
+        });
+
         
         do
         {
