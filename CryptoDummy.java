@@ -1,11 +1,15 @@
 // Classe “CryptoDummy.java”
-import java.io.*;  
+import java.io.*;
+import java.nio.charset.StandardCharsets;  
 public   class CryptoDummy
 {  private     byte[]   textoCifrado;
    private     byte[]   textoDecifrado;
+   private     byte[]   bytes;
 
    public   CryptoDummy()
-   {  textoCifrado = null;
+   {  
+      bytes = null;
+      textoCifrado = null;
       textoDecifrado = null;
    }
 
@@ -18,11 +22,21 @@ public   class CryptoDummy
       oos.close();
    }
 
-   
+   public  String  autoCifra(String texto, File fDummy)
+   	throws   IOException, ClassNotFoundException
+   {  
+      bytes = texto.getBytes("ISO-8859-1");
+
+      geraCifra(bytes, fDummy);
+
+      return new String(bytes, StandardCharsets.UTF_8);
+
+   }
 
    public  void  geraCifra(byte[] texto, File fDummy)
    	throws   IOException, ClassNotFoundException
-   {  ObjectInputStream ois = new ObjectInputStream (new FileInputStream (fDummy));  
+   {  
+      ObjectInputStream ois = new ObjectInputStream (new FileInputStream (fDummy));  
       int iDummy = (Integer) ois.readObject();
       ois.close();
       textoCifrado = texto;
@@ -30,9 +44,24 @@ public   class CryptoDummy
       {  textoCifrado[i] = (byte) (textoCifrado[i] + i + iDummy);
       }
    }
+
+
+   
+   public  String  autoDecifra(String texto, File fDummy)
+   	throws   IOException, ClassNotFoundException
+   {  
+      bytes = texto.getBytes("ISO-8859-1");
+
+      geraDecifra(bytes, fDummy);
+
+      return new String(bytes, StandardCharsets.UTF_8);
+
+   }
+
    public  void  geraDecifra(byte[] texto, File fDummy)
    	throws   IOException, ClassNotFoundException
-   {  ObjectInputStream ois = new ObjectInputStream (new FileInputStream (fDummy));  
+   {  
+      ObjectInputStream ois = new ObjectInputStream (new FileInputStream (fDummy));  
       int iDummy = (Integer) ois.readObject();
       ois.close();
       textoDecifrado = texto;
